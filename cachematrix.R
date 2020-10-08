@@ -1,30 +1,30 @@
-##
-## I simply set the input x as a matrix
-## and then set the solved value "s" as a null
-## then I changed every reference to "mean" to "solve"
-makeCacheMatrix <- function(x = matrix(sample(1:100,9),3,3)) {
-  s <- NULL
+# Pair of functions that cache the inverse of a matrix
+## Usage: Pass the result of a makeCacheMatrix call to cacheSolve 
+
+#' Utilize function that set the matrix and the inverse in an environment
+makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL
   set <- function(y) {
     x <<- y
-    s <<- NULL
+    inv <<- NULL
   }
   get <- function() x
-  setsolve <- function(solve) s <<- solve
-  getsolve <- function() s
+  setinverse <- function(inverse) inv <<- inverse
+  getinverse <- function() inv
   list(set = set, get = get,
-       setsolve = setsolve,
-       getsolve = getsolve)
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
-##
-## Same here, changed "mean" to "solve" and "m" to "s"
+## Compute and cache the inverse of a matrix
+## Return a matrix that is the inverse of 'x'
 cacheSolve <- function(x, ...) {
-  s <- x$getsolve()
-  if(!is.null(s)) {
-    message("getting inversed matrix")
-    return(s)
-  }
-  data <- x$get()
-  s <- solve(data, ...)
-  x$setsolve(s)
-  s
+inv <- x$getinverse()
+if(!is.null(inv)) {
+  message("getting cached matrix inverse")
+  return(inv)
+}
+data <- x$get()
+inv <- solve(data, ...)
+x$setinverse(inv)
+inv
 }
